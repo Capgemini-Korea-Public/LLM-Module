@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using OpenAI;
-using Cysharp.Threading.Tasks;
+
 public class ChatGPTManager : MonoBehaviour
 {
     private OpenAIApi openAI = new OpenAIApi();
