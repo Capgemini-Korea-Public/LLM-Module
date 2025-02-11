@@ -1,9 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
 using OpenAI;
+using TMPro;
+using DG.Tweening;
 
 public class ChatGPTManager : MonoBehaviour
 {
+    public TextMeshProUGUI TextBox;
     private OpenAIApi openAI = new OpenAIApi();
     private List<ChatMessage> messages = new List<ChatMessage>();
 
@@ -25,8 +28,7 @@ public class ChatGPTManager : MonoBehaviour
         {
             var chatResponse = response.Choices[0].Message;
             messages.Add(chatResponse);
-
-            Debug.Log(chatResponse.Content);
+            TextBox.DOText(chatResponse.Content, 0.5f);
         }
     }
 }
