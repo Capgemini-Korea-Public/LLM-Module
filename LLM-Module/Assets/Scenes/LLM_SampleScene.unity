@@ -1472,7 +1472,7 @@ GameObject:
   - component: {fileID: 1496454929}
   - component: {fileID: 1496454930}
   m_Layer: 0
-  m_Name: ChatGPTManager
+  m_Name: LLMManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

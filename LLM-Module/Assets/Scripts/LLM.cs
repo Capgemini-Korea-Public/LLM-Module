@@ -4,8 +4,9 @@ using OpenAI;
 using TMPro;
 using DG.Tweening;
 
-public class ChatGPTManager : MonoBehaviour
+public class LLM : MonoBehaviour
 {
+    #region OpenAI
     public TextMeshProUGUI TextBox;
     private OpenAIApi openAI = new OpenAIApi();
     private List<ChatMessage> messages = new List<ChatMessage>();
@@ -31,4 +32,9 @@ public class ChatGPTManager : MonoBehaviour
             TextBox.DOText(chatResponse.Content, 0.5f);
         }
     }
+    #endregion
+
+    #region Ollama
+
+    #endregion
 }
