@@ -106,7 +106,7 @@ public static partial class Ollama
     {
         ChatHistory.Enqueue(new Message("user", prompt, Texture2Base64(image)));
         Message[] messages;
-
+        Debug.Log($"1. enqueue {prompt}");
         if (systemPrompt == null)
             messages = ChatHistory.ToArray();
         else
@@ -119,7 +119,7 @@ public static partial class Ollama
         var request = new Request.Chat(model, messages, true, keep_alive);
         string payload = JsonConvert.SerializeObject(request);
         StringBuilder reply = new StringBuilder();
-
+        Debug.Log($"2. Request");
         await PostRequestStream(payload, Endpoints.CHAT, (Response.Chat response) =>
         {
             if (!response.done)
@@ -128,7 +128,7 @@ public static partial class Ollama
                 reply.Append(response.message.content);
             }
         });
-
+        Debug.Log($"3. Response");
         ChatHistory.Enqueue(new Message("assistant", reply.ToString()));
         while (ChatHistory.Count > HistoryLimit)
             ChatHistory.Dequeue();
