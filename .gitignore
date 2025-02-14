@@ -72,3 +72,4 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 /UnityXNode/Assets/99. Externals/Hivemind
 /UnityXNode/Assets/99. Externals/1. Player_EJ
+*.onnx

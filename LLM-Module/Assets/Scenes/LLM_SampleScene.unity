@@ -1471,6 +1471,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1496454929}
   - component: {fileID: 1496454930}
+  - component: {fileID: 1496454931}
   m_Layer: 0
   m_Name: LLMManager
   m_TagString: Untagged
@@ -1506,6 +1507,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TextBox: {fileID: 833694247}
+--- !u!114 &1496454931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1496454928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67ddcba578a451f45ac255421c790f9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Models:
+  - ModelName: GPT2
+    ONNXModel: {fileID: 5022602860645237092, guid: 0aa829226a46aa64fa3fd198314a1569, type: 3}
+    Tokenizer: {fileID: 4900000, guid: 8f173870fe9f19c408fc8a4eda2cf430, type: 3}
+  idx: 0
 --- !u!1 &1557290120
 GameObject:
   m_ObjectHideFlags: 0
@@ -1607,10 +1625,10 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1496454930}
-        m_TargetAssemblyTypeName: LLM, Assembly-CSharp
-        m_MethodName: AskViaOllama
-        m_Mode: 0
+      - m_Target: {fileID: 1496454931}
+        m_TargetAssemblyTypeName: SentisManager, Assembly-CSharp
+        m_MethodName: Run
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

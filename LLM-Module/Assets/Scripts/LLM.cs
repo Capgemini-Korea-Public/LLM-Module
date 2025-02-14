@@ -4,7 +4,6 @@ using OpenAI;
 using TMPro;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
-using System;
 using System.Threading.Tasks;
 
 public class LLM : MonoBehaviour
@@ -61,5 +60,9 @@ public class LLM : MonoBehaviour
         Debug.Log(result);
         TextBox.DOText(result, 0.5f);
     }
+    #endregion
+
+    #region Sentis
+    
     #endregion
 }
