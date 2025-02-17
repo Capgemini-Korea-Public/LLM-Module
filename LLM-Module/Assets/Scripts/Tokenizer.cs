@@ -1,110 +1,106 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
-using UnityEngine;
+using UnityEngine; // NuGet에서 Newtonsoft.Json 패키지를 추가하세요.
 
+/// <summary> /// JSON 파일의 구조에 맞춘 클래스들 /// </summary> 
+public class TokenizerConfig { public string version; public object truncation; public object padding; public List<AddedToken> added_tokens; public object normalizer; public PreTokenizerConfig pre_tokenizer; public PostProcessorConfig post_processor; public DecoderConfig decoder; public ModelConfig model; }
+public class AddedToken { public int id; public string content; public bool single_word; public bool lstrip; public bool rstrip; public bool normalized; public bool special; }
+public class PreTokenizerConfig { public string type; public bool add_prefix_space; public bool trim_offsets; public bool use_regex; }
+public class PostProcessorConfig { public string type; public bool add_prefix_space; public bool trim_offsets; public bool use_regex; }
+public class DecoderConfig { public string type; public bool add_prefix_space; public bool trim_offsets; public bool use_regex; }
+public class ModelConfig
+{
+    public string type; public object dropout; public object unk_token; public string continuing_subword_prefix; public string end_of_word_suffix; public bool fuse_unk; public bool byte_fallback; public Dictionary<string, int> vocab; // merges 규칙이 있다면 여기에 추가할 수 있습니다.
+}
+
+/// <summary> /// Unity Sentis에서 사용할 수 있는 Tokenizer 클래스 (간단한 ByteLevel BPE 기반 구현 예시) /// </summary> 
 public class Tokenizer
 {
-    private Dictionary<string, int> vocab;      // 단어 → 토큰 ID 매핑
-    private Dictionary<int, string> idToToken; // 토큰 ID → 단어 매핑
-    private Dictionary<(string, string), int> merges; // BPE 병합 규칙
+    private Dictionary<string, int> vocab;
+    private Dictionary<int, string> invVocab;
+    private int maxTokenLength;
 
-    public Tokenizer(TextAsset tokenizerJson)
+    /// <summary>
+    /// JSON 파일 경로를 받아 토크나이저 설정을 초기화합니다.
+    /// </summary>
+    /// <param name="jsonPath">tokenizer JSON 파일 경로</param>
+    public Tokenizer(TextAsset json)
     {
-        LoadTokenizer(tokenizerJson);
+        // JSON 파싱 (Newtonsoft.Json 사용)
+        TokenizerConfig config = JsonConvert.DeserializeObject<TokenizerConfig>(json.text);
+
+        // vocab 초기화 (추가 토큰이 있다면 config.added_tokens의 내용을 반영할 수도 있습니다)
+        vocab = config.model.vocab;
+
+        // 역방향 매핑: id -> token
+        invVocab = vocab.ToDictionary(kv => kv.Value, kv => kv.Key);
+
+        // vocab 내 토큰의 최대 길이를 계산 (최대 매칭을 위해)
+        maxTokenLength = vocab.Keys.Max(token => token.Length);
     }
 
-    private void LoadTokenizer(TextAsset tokenizerJson)
-    {
-        try
-        {
-            var tokenizerData = JsonConvert.DeserializeObject<TokenizerData>(tokenizerJson.text);
-
-            vocab = tokenizerData.model.vocab;
-            idToToken = vocab.ToDictionary(kv => kv.Value, kv => kv.Key);
-
-            merges = new Dictionary<(string, string), int>();
-            for (int i = 0; i < tokenizerData.model.merges.Count; i++)
-            {
-                string[] mergePair = tokenizerData.model.merges[i].Split(' ');
-                merges[(mergePair[0], mergePair[1])] = i;
-            }
-
-            Debug.Log("Tokenizer loaded successfully!");
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Failed to load tokenizer: {e.Message}");
-        }
-    }
-
+    /// <summary>
+    /// 입력 문자열을 토큰 ID 리스트로 인코딩합니다.
+    /// (여기서는 간단한 그리디 알고리즘으로 최대 매칭 방식을 사용)
+    /// </summary>
+    /// <param name="text">인코딩할 텍스트</param>
+    /// <returns>토큰 ID 리스트</returns>
     public int[] Encode(string text)
     {
-        List<int> tokenIds = new List<int>();
-
-        // Step 1: 문장을 개별 문자로 분해
-        List<string> subwords = text.Select(c => c.ToString()).ToList();
-
-        // Step 2: BPE 병합 적용
-        while (subwords.Count > 1)
+        List<int> tokens = new List<int>();
+        int i = 0;
+        while (i < text.Length)
         {
-            (string, string)? bestPair = null;
-            int bestRank = int.MaxValue;
-            int mergeIndex = -1;
-
-            for (int i = 0; i < subwords.Count - 1; i++)
+            int length = Math.Min(maxTokenLength, text.Length - i);
+            bool matchFound = false;
+            // 최대 길이부터 1글자까지 감소시키며 vocab에서 매칭되는 토큰을 찾음
+            while (length > 0)
             {
-                var pair = (subwords[i], subwords[i + 1]);
-
-                if (merges.TryGetValue(pair, out int rank) && rank < bestRank)
+                string substr = text.Substring(i, length);
+                if (vocab.ContainsKey(substr))
                 {
-                    bestPair = pair;
-                    bestRank = rank;
-                    mergeIndex = i;
+                    tokens.Add(vocab[substr]);
+                    i += length;
+                    matchFound = true;
+                    break;
                 }
+                length--;
             }
-
-            if (bestPair == null || mergeIndex == -1)
-                break;
-
-            // 가장 우선순위 높은 병합을 수행
-            subwords[mergeIndex] = bestPair.Value.Item1 + bestPair.Value.Item2;
-            subwords.RemoveAt(mergeIndex + 1);
+            if (!matchFound)
+            {
+                // 매칭되는 토큰이 없으면 (이론상 발생하지 않아야 함) 한 글자씩 처리
+                tokens.Add(vocab[text.Substring(i, 1)]);
+                i++;
+            }
         }
 
-        // Step 3: vocab을 참고하여 토큰 ID로 변환
-        foreach (var token in subwords)
+        int[] retToken = new int[tokens.Count];
+        for (int j = 0; j < tokens.Count; j++)
         {
-            if (vocab.ContainsKey(token))
-            {
-                tokenIds.Add(vocab[token]);
-            }
-            else
-            {
-                tokenIds.Add(vocab.ContainsKey("<|endoftext|>") ? vocab["<|endoftext|>"] : -1); // 알 수 없는 단어 처리
-            }
+            retToken[j] = tokens[j];
         }
 
-        return tokenIds.ToArray();
+        return retToken;
     }
 
+    /// <summary>
+    /// 토큰 ID 리스트를 다시 문자열로 디코딩합니다.
+    /// </summary>
+    /// <param name="tokenIds">토큰 ID 리스트</param>
+    /// <returns>디코딩된 텍스트</returns>
     public string Decode(int[] tokenIds)
     {
-        if (tokenIds == null || tokenIds.Length == 0)
-            return "";
-
-        return string.Join("", tokenIds.Select(id => idToToken.ContainsKey(id) ? idToToken[id] : "<unk>"));
-    }
-
-    private class TokenizerData
-    {
-        public Model model { get; set; }
-    }
-
-    private class Model
-    {
-        public Dictionary<string, int> vocab { get; set; }
-        public List<string> merges { get; set; }
+        string text = "";
+        foreach (int id in tokenIds)
+        {
+            if (invVocab.ContainsKey(id))
+            {
+                text += invVocab[id];
+            }
+        }
+        return text;
     }
 }
