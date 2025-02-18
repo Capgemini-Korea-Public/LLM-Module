@@ -5,9 +5,19 @@ using TMPro;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
 using System.Threading.Tasks;
+using LLMUnity;
 
-public class LLMManager : MonoBehaviour
+public class LLMManager_TMP : MonoBehaviour
 {
+    LLMCharacter llmCharacter;
+    LLM llm;
+
+    private void Awake()
+    {
+        llmCharacter = GetComponent<LLMCharacter>();
+        llm = GetComponent<LLM>();
+    }
+
     private void Start()
     {
         Ollama.InitChat();
@@ -16,12 +26,12 @@ public class LLMManager : MonoBehaviour
     #region OpenAI
     public TextMeshProUGUI TextBox;
     private OpenAIApi openAI = new OpenAIApi();
-    private List<ChatMessage> messages = new List<ChatMessage>();
+    private List<OpenAI.ChatMessage> messages = new List<OpenAI.ChatMessage>();
 
 
     public async void AskChatGPT(string inputText)
     {
-        ChatMessage newMessage = new ChatMessage();
+        OpenAI.ChatMessage newMessage = new OpenAI.ChatMessage();
         newMessage.Content = inputText;
         newMessage.Role = "user";
 
@@ -62,7 +72,24 @@ public class LLMManager : MonoBehaviour
     }
     #endregion
 
-    #region Sentis
-    
+    #region LLMUnity
+    void HandleReply(string reply)
+    {
+        Debug.Log(reply);
+    }
+
+    void ReplyCompleted()
+    {
+        Debug.Log("AI Reply Done");
+    }
+    public void Run(TMP_InputField input)
+    {
+        AskViaLLMUnity(input.text);
+    }
+    private async void AskViaLLMUnity(string inputText)
+    {
+        Debug.Log($"AskViaLLMUnity {llm.model} Start");
+        string reply = await llmCharacter.Chat(inputText, HandleReply, ReplyCompleted);
+    }
     #endregion
 }
