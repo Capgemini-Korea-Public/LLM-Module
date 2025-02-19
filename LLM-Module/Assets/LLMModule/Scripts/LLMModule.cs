@@ -6,16 +6,21 @@ using DG.Tweening;
 using Cysharp.Threading.Tasks;
 using System.Threading.Tasks;
 using LLMUnity;
-
-public class LLMManager_TMP : MonoBehaviour
+/// <summary>
+/// Using LLMUnity, OpenAI, Ollama All in One Module
+/// Using For ChatBot AI
+/// </summary>
+public class LLMModule : MonoBehaviour
 {
+    // RESTfulAPI, LocalAPI, NativeLibrary ¼±ÅÃ
+    [SerializeField] private EModelType EmodelType;
+
     LLMCharacter llmCharacter;
-    LLM llm;
 
     private void Awake()
     {
+        // ¾ê³×µµ ÀüºÎ »©¾ßÇÔ.
         llmCharacter = GetComponent<LLMCharacter>();
-        llm = GetComponent<LLM>();
     }
 
     private void Start()
@@ -76,19 +81,20 @@ public class LLMManager_TMP : MonoBehaviour
     void HandleReply(string reply)
     {
         Debug.Log(reply);
+        TextBox.text = reply;
     }
 
     void ReplyCompleted()
     {
         Debug.Log("AI Reply Done");
     }
+
     public void Run(TMP_InputField input)
     {
         AskViaLLMUnity(input.text);
     }
     private async void AskViaLLMUnity(string inputText)
     {
-        Debug.Log($"AskViaLLMUnity {llm.model} Start");
         string reply = await llmCharacter.Chat(inputText, HandleReply, ReplyCompleted);
     }
     #endregion

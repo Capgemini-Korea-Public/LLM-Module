@@ -40,7 +40,7 @@ namespace LLMUnity
         protected LLM _prellm;
         protected List<(string, string)> requestHeaders;
         protected List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
-
+        protected ILLMService llmService;
         /// <summary>
         /// The Unity Awake function that initializes the state before the application starts.
         /// The following actions are executed:
@@ -65,6 +65,7 @@ namespace LLMUnity
                     LLMUnitySetup.LogError(error);
                     throw new Exception(error);
                 }
+                llmService = new NativeAdapter(llm);
             }
             else
             {
@@ -237,16 +238,16 @@ namespace LLMUnity
             switch (endpoint)
             {
                 case "tokenize":
-                    callResult = await llm.Tokenize(json);
+                    callResult = await llmService.Tokenize(json);
                     break;
                 case "detokenize":
-                    callResult = await llm.Detokenize(json);
+                    callResult = await llmService.Detokenize(json);
                     break;
                 case "embeddings":
-                    callResult = await llm.Embeddings(json);
+                    callResult = await llmService.Embeddings(json);
                     break;
                 case "slots":
-                    callResult = await llm.Slot(json);
+                    callResult = await llmService.Slot(json);
                     break;
                 default:
                     LLMUnitySetup.LogError($"Unknown endpoint {endpoint}");

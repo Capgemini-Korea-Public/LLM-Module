@@ -844,6 +844,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 439194638}
   m_CullTransparentMesh: 1
+--- !u!1 &629097271
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 629097272}
+  - component: {fileID: 629097273}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &629097272
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 629097271}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &629097273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 629097271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf336d136dee16649ad477990da82180, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &809965235
 GameObject:
   m_ObjectHideFlags: 0
@@ -1466,8 +1510,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1496454930}
-        m_TargetAssemblyTypeName: LLMManager, Assembly-CSharp
+      - m_Target: {fileID: 1496454933}
+        m_TargetAssemblyTypeName: LLMModule, Assembly-CSharp
         m_MethodName: Run
         m_Mode: 2
         m_Arguments:
@@ -1740,9 +1784,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1496454929}
-  - component: {fileID: 1496454930}
   - component: {fileID: 1496454932}
   - component: {fileID: 1496454931}
+  - component: {fileID: 1496454933}
   m_Layer: 0
   m_Name: LLMManager
   m_TagString: Untagged
@@ -1765,19 +1809,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1496454930
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1496454928}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0293cd018382e34082ae9052a06fd2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TextBox: {fileID: 833694247}
 --- !u!114 &1496454931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1795,7 +1826,7 @@ MonoBehaviour:
   _llm: {fileID: 1496454932}
   APIKey: 
   host: localhost
-  port: 13333
+  port: 11434
   numRetries: 10
   save: 
   saveCache: 0
@@ -1868,6 +1899,20 @@ MonoBehaviour:
   maxContextLength: 131072
   embeddingsOnly: 0
   embeddingLength: 4096
+--- !u!114 &1496454933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1496454928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0293cd018382e34082ae9052a06fd2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EmodelType: 0
+  TextBox: {fileID: 833694247}
 --- !u!1 &1557290120
 GameObject:
   m_ObjectHideFlags: 0
@@ -2309,3 +2354,4 @@ SceneRoots:
   - {fileID: 1126975410}
   - {fileID: 1438154450}
   - {fileID: 1496454929}
+  - {fileID: 629097272}
