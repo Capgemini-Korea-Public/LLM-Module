@@ -1,7 +1,6 @@
 // NativeAdapter wraps the internal LLM instance and implements the ILLMService interface.
 // This adapter uses the native (internal) LLM execution method (e.g., gguf model) provided by LLM.cs.
 using LLMUnity;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 public class NativeAdapter : ILLMService
 {
