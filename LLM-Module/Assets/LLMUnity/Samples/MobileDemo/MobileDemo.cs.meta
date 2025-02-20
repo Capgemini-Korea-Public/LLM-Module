@@ -13,6 +13,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 273604
   packageName: LLM for Unity
-  packageVersion: 2.4.1
+  packageVersion: 2.4.2
   assetPath: Assets/LLMUnity/Samples/MobileDemo/MobileDemo.cs
-  uploadId: 718179
+  uploadId: 733990

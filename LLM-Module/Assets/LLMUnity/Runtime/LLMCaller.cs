@@ -15,32 +15,37 @@ namespace LLMUnity
     /// </summary>
     public class LLMCaller : MonoBehaviour
     {
-        /// <summary> toggle to show/hide advanced options in the GameObject </summary>
+        /// <summary> show/hide advanced options in the GameObject </summary>
+        [Tooltip("show/hide advanced options in the GameObject")]
         [HideInInspector] public bool advancedOptions = false;
-        /// <summary> toggle to use remote LLM server or local LLM </summary>
+        /// <summary> use remote LLM server </summary>
+        [Tooltip("use remote LLM server")]
         [LocalRemote] public bool remote = false;
-        /// <summary> the LLM object to use </summary>
+        /// <summary> LLM GameObject to use </summary>
+        [Tooltip("LLM GameObject to use")] // Tooltip: ignore
         [Local, SerializeField] protected LLM _llm;
         public LLM llm
         {
             get => _llm;//whatever
             set => SetLLM(value);
         }
-
-        /// <summary> allows to use a server with API key </summary>
+        /// <summary> API key for the remote server </summary>
+        [Tooltip("API key for the remote server")]
         [Remote] public string APIKey;
-
-        /// <summary> host to use for the LLM server </summary>
+        /// <summary> host of the remote LLM server </summary>
+        [Tooltip("host of the remote LLM server")]
         [Remote] public string host = "localhost";
-        /// <summary> port to use for the LLM server </summary>
+        /// <summary> port of the remote LLM server </summary>
+        [Tooltip("port of the remote LLM server")]
         [Remote] public int port = 13333;
-        /// <summary> number of retries to use for the LLM server requests (-1 = infinite) </summary>
+        /// <summary> number of retries to use for the remote LLM server requests (-1 = infinite) </summary>
+        [Tooltip("number of retries to use for the remote LLM server requests (-1 = infinite)")]
         [Remote] public int numRetries = 10;
 
         protected LLM _prellm;
         protected List<(string, string)> requestHeaders;
         protected List<UnityWebRequest> WIPRequests = new List<UnityWebRequest>();
-        protected ILLMService llmService;
+
         /// <summary>
         /// The Unity Awake function that initializes the state before the application starts.
         /// The following actions are executed:
@@ -65,19 +70,10 @@ namespace LLMUnity
                     LLMUnitySetup.LogError(error);
                     throw new Exception(error);
                 }
-                llmService = new NativeAdapter(llm);
             }
             else
             {
-                if (String.IsNullOrEmpty(APIKey)){
-                    Debug.Log("I'm Ollama");
-                    llmService = new LocalhostAPIAdaptor();
-                    //requestHeaders.Add(("Authorization", "Bearer " + APIKey)); 
-                }
-                else
-                {
-                    // llmService = new RESTfulAPIAdaptor;
-                }
+                if (!String.IsNullOrEmpty(APIKey)) requestHeaders.Add(("Authorization", "Bearer " + APIKey));
             }
         }
 
@@ -239,12 +235,36 @@ namespace LLMUnity
 
         protected virtual async Task<Ret> PostRequestLocal<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
         {
-            return await llmService.PostRequest(json, endpoint, getContent, callback);
+            // send a post request to the server and call the relevant callbacks to convert the received content and handle it
+            // this function has streaming functionality i.e. handles the answer while it is being received
+            while (!llm.failed && !llm.started) await Task.Yield();
+            string callResult = null;
+            switch (endpoint)
+            {
+                case "tokenize":
+                    callResult = await llm.Tokenize(json);
+                    break;
+                case "detokenize":
+                    callResult = await llm.Detokenize(json);
+                    break;
+                case "embeddings":
+                    callResult = await llm.Embeddings(json);
+                    break;
+                case "slots":
+                    callResult = await llm.Slot(json);
+                    break;
+                default:
+                    LLMUnitySetup.LogError($"Unknown endpoint {endpoint}");
+                    break;
+            }
+
+            Ret result = ConvertContent(callResult, getContent);
+            callback?.Invoke(result);
+            return result;
         }
 
         protected virtual async Task<Ret> PostRequestRemote<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
         {
-            /*
             // send a post request to the server and call the relevant callbacks to convert the received content and handle it
             // this function has streaming functionality i.e. handles the answer while it is being received
             if (endpoint == "slots")
@@ -311,8 +331,6 @@ namespace LLMUnity
             if (error != null) LLMUnitySetup.LogError(error);
             callback?.Invoke(result);
             return result;
-            */
-            return await llmService.PostRequest(json, endpoint, getContent, callback);
         }
 
         protected virtual async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
