@@ -1,7 +1,7 @@
-public enum EModelType
+public enum EAPIType
 {
     Native,
-    RESTfulAPI,
+    RestfulAPI,
     LocalhostAPI
 }
 

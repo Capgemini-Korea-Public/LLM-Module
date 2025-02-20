@@ -14,26 +14,54 @@ using LLMUnity;
 public class LLMModule : MonoBehaviour
 {
     // RESTfulAPI, LocalAPI, NativeLibrary 선택
-    [SerializeField] private EModelType EmodelType;
+    [SerializeField] private EAPIType apiType;
 
-    LLMCharacter llmCharacter;
+    // Adaptor를 여기에 적용
+    ILLMService llmService;
 
+    // EModelType에 따라 다른 llmService를 끼워준다.
     private void Awake()
     {
-        // 얘네도 전부 빼야함.
-        llmCharacter = GetComponent<LLMCharacter>();
+        switch(apiType){
+            case EAPIType.Native:
+                llmService = new LocalLibraryAdaptor();
+                break;
+            case EAPIType.LocalhostAPI:
+                llmService = new LocalhostAPIAdaptor();
+                break;
+            case EAPIType.RestfulAPI:
+                llmService = new RESTfulAPIAdaptor();
+                break;
+        }
     }
 
     private void Start()
     {
-        Ollama.InitChat();
+        llmService.Init();
     }
 
+    // FOR TEST
+    public void Chat(TMP_InputField inputField)
+    {
+        ChatBot(inputField.text);
+    }
+
+    public async void ChatBot(string inputText)
+    {
+        Debug.Log($"{llmService.GetType().Name} start");
+        await llmService.Chat(inputText);
+    }
+
+    /*
     #region OpenAI
     public TextMeshProUGUI TextBox;
     private OpenAIApi openAI = new OpenAIApi();
     private List<OpenAI.ChatMessage> messages = new List<OpenAI.ChatMessage>();
 
+    public void Ask(TMP_InputField inputField)
+    {
+        AskChatGPT(inputField.text);
+    }
 
     public async void AskChatGPT(string inputText)
     {
@@ -53,11 +81,11 @@ public class LLMModule : MonoBehaviour
         {
             var chatResponse = response.Choices[0].Message;
             messages.Add(chatResponse);
-            TextBox.DOText(chatResponse.Content, 0.5f);
         }
+
     }
     #endregion
-
+    */
     #region Ollama
     private Queue<string> buffer = new Queue<string>();
     private string model = "llama3.1";
@@ -74,7 +102,7 @@ public class LLMModule : MonoBehaviour
             result += buffer.Dequeue();
 
         Debug.Log(result);
-        TextBox.DOText(result, 0.5f);
+        //TextBox.DOText(result, 0.5f);
     }
     #endregion
 
@@ -82,7 +110,7 @@ public class LLMModule : MonoBehaviour
     void HandleReply(string reply)
     {
         Debug.Log(reply);
-        TextBox.text = reply;
+        //TextBox.text = reply;
     }
 
     void ReplyCompleted()
@@ -96,7 +124,7 @@ public class LLMModule : MonoBehaviour
     }
     private async void AskViaLLMUnity(string inputText)
     {
-        string reply = await llmCharacter.Chat(inputText, HandleReply, ReplyCompleted);
+        //string reply = await llmCharacter.Chat(inputText, HandleReply, ReplyCompleted);
     }
     #endregion
 }
