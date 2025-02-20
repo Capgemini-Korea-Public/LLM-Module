@@ -4,3 +4,4 @@ public enum EModelType
     RESTfulAPI,
     LocalhostAPI
 }
+

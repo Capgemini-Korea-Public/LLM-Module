@@ -2,6 +2,7 @@
 // This adapter uses the native (internal) LLM execution method (e.g., gguf model) provided by LLM.cs.
 using LLMUnity;
 using System.Threading.Tasks;
+using UnityEngine;
 public class NativeAdapter : ILLMService
 {
     private LLM _llm;
@@ -11,35 +12,53 @@ public class NativeAdapter : ILLMService
     {
         _llm = llm;
     }
-
-    // Uses the internal LLM instance to tokenize the input text.
-    public async Task<string> Tokenize(string text)
+    Ret ConvertContent<Res, Ret>(string response, ContentCallback<Res, Ret> getContent = null)
     {
-        return await _llm.Tokenize(text);
+        // template function to convert the json received and get the content
+        if (response == null) return default;
+        response = response.Trim();
+        if (response.StartsWith("data: "))
+        {
+            string responseArray = "";
+            foreach (string responsePart in response.Replace("\n\n", "").Split("data: "))
+            {
+                if (responsePart == "") continue;
+                if (responseArray != "") responseArray += ",\n";
+                responseArray += responsePart;
+            }
+            response = $"{{\"data\": [{responseArray}]}}";
+        }
+        return getContent(JsonUtility.FromJson<Res>(response));
     }
 
-    // Uses the internal LLM instance to convert a list of tokens back to text.
-    public async Task<string> Detokenize(string tokens)
+    public async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
     {
-        return await _llm.Detokenize(tokens);
-    }
+        Debug.Log("[LocalRun]-----------------------------------------------");
+        // send a post request to the server and call the relevant callbacks to convert the received content and handle it
+        // this function has streaming functionality i.e. handles the answer while it is being received
+        while (!_llm.failed && !_llm.started) await Task.Yield();
+        string callResult = null;
+        switch (endpoint)
+        {
+            case "tokenize":
+                callResult = await _llm.Tokenize(json);
+                break;
+            case "detokenize":
+                callResult = await _llm.Detokenize(json);
+                break;
+            case "embeddings":
+                callResult = await _llm.Embeddings(json);
+                break;
+            case "slots":
+                callResult = await _llm.Slot(json);
+                break;
+            default:
+                LLMUnitySetup.LogError($"Unknown endpoint {endpoint}");
+                break;
+        }
 
-    // Uses the internal LLM instance to compute embeddings for the input text.
-    public async Task<string> Embeddings(string text)
-    {
-        return await _llm.Embeddings(text);
-    }
-
-    // Uses the internal LLM instance to perform text completion based on the given prompt.
-    // The 'stream' parameter indicates if the response should be streamed.
-    public async Task<string> Complete(string prompt, Callback<string> streamCallback = null)
-    {
-        return await _llm.Completion(prompt, streamCallback);
-    }
-
-    // Uses the internal LLM instance to handle slot operations (e.g., saving/restoring state).
-    public async Task<string> Slot(string json)
-    {
-        return await _llm.Slot(json);
+        Ret result = ConvertContent(callResult, getContent);
+        callback?.Invoke(result);
+        return result;
     }
 }

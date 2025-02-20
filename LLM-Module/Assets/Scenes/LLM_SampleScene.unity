@@ -1822,7 +1822,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   advancedOptions: 0
-  remote: 0
+  remote: 1
   _llm: {fileID: 1496454932}
   APIKey: 
   host: localhost

@@ -10,6 +10,7 @@ using LLMUnity;
 /// Using LLMUnity, OpenAI, Ollama All in One Module
 /// Using For ChatBot AI
 /// </summary>
+
 public class LLMModule : MonoBehaviour
 {
     // RESTfulAPI, LocalAPI, NativeLibrary ¼±ÅÃ
@@ -48,7 +49,7 @@ public class LLMModule : MonoBehaviour
 
         var response = await openAI.CreateChatCompletion(request);
 
-        if(response.Choices != null && response.Choices.Count > 0)
+        if (response.Choices != null && response.Choices.Count > 0)
         {
             var chatResponse = response.Choices[0].Message;
             messages.Add(chatResponse);
@@ -69,9 +70,9 @@ public class LLMModule : MonoBehaviour
 
         Debug.Log("AskViaOllama Done");
         string result = string.Empty;
-        while(buffer.Count > 0)
-            result += buffer.Dequeue();   
-        
+        while (buffer.Count > 0)
+            result += buffer.Dequeue();
+
         Debug.Log(result);
         TextBox.DOText(result, 0.5f);
     }
@@ -99,3 +100,4 @@ public class LLMModule : MonoBehaviour
     }
     #endregion
 }
+

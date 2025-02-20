@@ -229,11 +229,13 @@ namespace LLMUnity
 
         protected virtual bool CheckTemplate()
         {
+            /*
             if (template == null)
             {
                 LLMUnitySetup.LogError("Template not set!");
                 return false;
             }
+            */
             return true;
         }
 
@@ -584,7 +586,6 @@ namespace LLMUnity
             string result = await Slot(cachepath, "restore");
             return result;
         }
-
         protected override async Task<Ret> PostRequestLocal<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
         {
             if (endpoint != "completion") return await base.PostRequestLocal(json, endpoint, getContent, callback);

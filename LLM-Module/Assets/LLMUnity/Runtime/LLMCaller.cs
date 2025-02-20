@@ -69,7 +69,15 @@ namespace LLMUnity
             }
             else
             {
-                if (!String.IsNullOrEmpty(APIKey)) requestHeaders.Add(("Authorization", "Bearer " + APIKey));
+                if (String.IsNullOrEmpty(APIKey)){
+                    Debug.Log("I'm Ollama");
+                    llmService = new LocalhostAPIAdaptor();
+                    //requestHeaders.Add(("Authorization", "Bearer " + APIKey)); 
+                }
+                else
+                {
+                    // llmService = new RESTfulAPIAdaptor;
+                }
             }
         }
 
@@ -231,36 +239,12 @@ namespace LLMUnity
 
         protected virtual async Task<Ret> PostRequestLocal<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
         {
-            // send a post request to the server and call the relevant callbacks to convert the received content and handle it
-            // this function has streaming functionality i.e. handles the answer while it is being received
-            while (!llm.failed && !llm.started) await Task.Yield();
-            string callResult = null;
-            switch (endpoint)
-            {
-                case "tokenize":
-                    callResult = await llmService.Tokenize(json);
-                    break;
-                case "detokenize":
-                    callResult = await llmService.Detokenize(json);
-                    break;
-                case "embeddings":
-                    callResult = await llmService.Embeddings(json);
-                    break;
-                case "slots":
-                    callResult = await llmService.Slot(json);
-                    break;
-                default:
-                    LLMUnitySetup.LogError($"Unknown endpoint {endpoint}");
-                    break;
-            }
-
-            Ret result = ConvertContent(callResult, getContent);
-            callback?.Invoke(result);
-            return result;
+            return await llmService.PostRequest(json, endpoint, getContent, callback);
         }
 
         protected virtual async Task<Ret> PostRequestRemote<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
         {
+            /*
             // send a post request to the server and call the relevant callbacks to convert the received content and handle it
             // this function has streaming functionality i.e. handles the answer while it is being received
             if (endpoint == "slots")
@@ -327,6 +311,8 @@ namespace LLMUnity
             if (error != null) LLMUnitySetup.LogError(error);
             callback?.Invoke(result);
             return result;
+            */
+            return await llmService.PostRequest(json, endpoint, getContent, callback);
         }
 
         protected virtual async Task<Ret> PostRequest<Res, Ret>(string json, string endpoint, ContentCallback<Res, Ret> getContent, Callback<Ret> callback = null)
