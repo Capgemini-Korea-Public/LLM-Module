@@ -2,11 +2,6 @@ MIT License
 
 Copyright (c) 2023 Undream AI
 
-본 프로젝트는 원작자의 코드를 기반으로 일부 수정되었습니다.
-Copyright (c) 2025 LuBly (Hyunho Park)
-
-이 소프트웨어는 MIT 라이선스에 따라 배포됩니다.
-
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
