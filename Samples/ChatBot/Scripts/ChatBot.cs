@@ -3,14 +3,17 @@ using UnityEngine;
 
 public class ChatBot : MonoBehaviour
 {
+    [SerializeField] TextMeshProUGUI textBox;
+
     LLMModule llmModule;
 
     private void Awake()
     {
         llmModule = FindAnyObjectByType<LLMModule>();
     }
-    public void RunLLM(TMP_InputField textinput)
+    public async void RunLLM(TMP_InputField textinput)
     {
-        llmModule.Chat(textinput.text);
+        string res = await llmModule.Chat(textinput.text);
+        textBox.text = res; 
     }
 }

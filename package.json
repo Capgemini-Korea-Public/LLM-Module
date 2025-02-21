@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "displayName": "LLM Module for Unity",
   "description": "In Unity, you can use LLM features with different models using a RESTful API, a localhost API, or a local library.",
-  "unity": "2021.3",
+  "unity": "6000.0",
   "keywords": [
     "llmModule",
     "unity"
@@ -22,7 +22,7 @@
   },
   "samples": [
     {
-      "displayName": "using LLM Example",
+      "displayName": "ChatBot",
       "description": "Example Chatbot for Using LLM",
       "path": "Samples~/ChatBot"
     }

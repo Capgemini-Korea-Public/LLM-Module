@@ -11,13 +11,13 @@ using LLMUnity;
 public class LLMModule : MonoBehaviour
 {
     // RESTfulAPI, LocalAPI, NativeLibrary 선택
-    [SerializeField] private EAPIType apiType;
+    public EAPIType apiType;
 
     // Adaptor를 여기에 적용
     ILLMService llmService;
     AdaptorData llmServiceData;
-    [SerializeField] private LLM llm;
-    [SerializeField] private LLMCharacter llmCharacter;
+    [HideInInspector] public LLM llm;
+    [HideInInspector] public LLMCharacter llmCharacter;
     // EModelType에 따라 다른 llmService를 끼워준다.
 
     private void Start()
@@ -25,8 +25,6 @@ public class LLMModule : MonoBehaviour
         switch(apiType){
             // 차후 custom editor를 활용하여 native를 골랐을 때만 component를 추가하는 것으로 수정
             case EAPIType.Native:
-                llm.GetComponent<LLM>();
-                llmCharacter.GetComponent<LLMCharacter>();
                 llmService = new LocalLibraryAdaptor();
                 llmServiceData = new LocalLibraryAdaptorData(llm, llmCharacter);
                 break;
@@ -43,10 +41,10 @@ public class LLMModule : MonoBehaviour
         llmService.Init(llmServiceData);
     }
 
-    public async void Chat(string inputText)
+    public async Task<string> Chat(string inputText)
     {
         Debug.Log($"{llmService.GetType().Name} start");
-        await llmService.Chat(inputText);
+        return await llmService.Chat(inputText);
     }
 }
 

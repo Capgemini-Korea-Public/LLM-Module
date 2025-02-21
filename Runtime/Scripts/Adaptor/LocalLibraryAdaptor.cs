@@ -9,8 +9,8 @@ public class LocalLibraryAdaptor : ILLMService
     public void Init(AdaptorData adaptorData)
     {
         localLibraryAdaptorData = adaptorData as LocalLibraryAdaptorData;
-        this.llm = localLibraryAdaptorData.llm;
-        this.llmCharacter = localLibraryAdaptorData.llmCharacter;
+        llm = localLibraryAdaptorData.llm;
+        llmCharacter = localLibraryAdaptorData.llmCharacter;
     }
 
     public async Task<string> Chat(string inputText)
