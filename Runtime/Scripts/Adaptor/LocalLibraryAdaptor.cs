@@ -1,6 +1,5 @@
 using LLMUnity;
 using System.Threading.Tasks;
-using TMPro;
 using UnityEngine;
 public class LocalLibraryAdaptor : ILLMService
 {
@@ -23,7 +22,6 @@ public class LocalLibraryAdaptor : ILLMService
     void HandleReply(string reply)
     {
         Debug.Log(reply);
-        //TextBox.text = reply;
     }
 
     void ReplyCompleted()
