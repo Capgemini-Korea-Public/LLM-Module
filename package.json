@@ -9,7 +9,7 @@
     "unity"
   ],
   "dependencies": {
-    "com.unity.sentis": "2.1.2"
+    
   },
   "repository": {
     "type": "git",
