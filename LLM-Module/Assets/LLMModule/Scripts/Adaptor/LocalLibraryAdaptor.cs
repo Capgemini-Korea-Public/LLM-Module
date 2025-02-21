@@ -1,19 +1,33 @@
+using LLMUnity;
 using System.Threading.Tasks;
-
+using TMPro;
+using UnityEngine;
 public class LocalLibraryAdaptor : ILLMService
 {
-    public void Init()
+    LLM llm;
+    LLMCharacter llmCharacter;
+    LocalLibraryAdaptorData localLibraryAdaptorData;
+    public void Init(AdaptorData adaptorData)
     {
-        Ollama.InitChat();
+        localLibraryAdaptorData = adaptorData as LocalLibraryAdaptorData;
+        this.llm = localLibraryAdaptorData.llm;
+        this.llmCharacter = localLibraryAdaptorData.llmCharacter;
     }
 
-    public Task Chat(string inputText)
+    public async Task<string> Chat(string inputText)
     {
-        throw new System.NotImplementedException();
+        string res = await llmCharacter.Chat(inputText, HandleReply, ReplyCompleted);
+        return res;
     }
 
-    Task<string> ILLMService.Chat(string inputText)
+    void HandleReply(string reply)
     {
-        throw new System.NotImplementedException();
+        Debug.Log(reply);
+        //TextBox.text = reply;
+    }
+
+    void ReplyCompleted()
+    {
+        Debug.Log("AI Reply Done");
     }
 }

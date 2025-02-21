@@ -7,10 +7,11 @@ public class RESTfulAPIAdaptor : ILLMService
 {
     private OpenAIApi openAI = new OpenAIApi();
     private List<OpenAI.ChatMessage> messages = new List<OpenAI.ChatMessage>();
-    public virtual void Init()
+    RESTfulAdaptorData restfulAdaptorData;
+    public virtual void Init(AdaptorData adaptorData)
     {
         // Role, model º±≈√ 
-        
+        restfulAdaptorData = adaptorData as RESTfulAdaptorData;
     }
 
     public async Task<string> Chat(string inputText)

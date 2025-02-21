@@ -7,7 +7,7 @@ public class LocalhostAPIAdaptor : ILLMService
     private Queue<string> buffer;
     private string model;
 
-    public void Init()
+    public void Init(AdaptorData adaptorData)
     {
         Ollama.InitChat();
         buffer = new Queue<string>();

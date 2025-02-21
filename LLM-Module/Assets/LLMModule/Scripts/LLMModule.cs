@@ -18,27 +18,34 @@ public class LLMModule : MonoBehaviour
 
     // Adaptor를 여기에 적용
     ILLMService llmService;
-
+    AdaptorData llmServiceData;
+    [SerializeField] private LLM llm;
+    [SerializeField] private LLMCharacter llmCharacter;
     // EModelType에 따라 다른 llmService를 끼워준다.
-    private void Awake()
-    {
-        switch(apiType){
-            case EAPIType.Native:
-                llmService = new LocalLibraryAdaptor();
-                break;
-            case EAPIType.LocalhostAPI:
-                llmService = new LocalhostAPIAdaptor();
-                break;
-            case EAPIType.RestfulAPI:
-                llmService = new RESTfulAPIAdaptor();
-                break;
-        }
-    }
 
     private void Start()
     {
-        llmService.Init();
+        switch(apiType){
+            // 차후 custom editor를 활용하여 native를 골랐을 때만 component를 추가하는 것으로 수정
+            case EAPIType.Native:
+                llm.GetComponent<LLM>();
+                llmCharacter.GetComponent<LLMCharacter>();
+                llmService = new LocalLibraryAdaptor();
+                llmServiceData = new LocalLibraryAdaptorData(llm, llmCharacter);
+                break;
+            case EAPIType.LocalhostAPI:
+                llmService = new LocalhostAPIAdaptor();
+                llmServiceData = new LocalhostAdaptorData();
+                break;
+            case EAPIType.RestfulAPI:
+                llmService = new RESTfulAPIAdaptor();
+                llmServiceData = new RESTfulAdaptorData();
+                break;
+        }
+
+        llmService.Init(llmServiceData);
     }
+
 
     // FOR TEST
     public void Chat(TMP_InputField inputField)
@@ -86,6 +93,7 @@ public class LLMModule : MonoBehaviour
     }
     #endregion
     */
+    /*
     #region Ollama
     private Queue<string> buffer = new Queue<string>();
     private string model = "llama3.1";
@@ -105,7 +113,7 @@ public class LLMModule : MonoBehaviour
         //TextBox.DOText(result, 0.5f);
     }
     #endregion
-
+    */
     #region LLMUnity
     void HandleReply(string reply)
     {
@@ -124,7 +132,7 @@ public class LLMModule : MonoBehaviour
     }
     private async void AskViaLLMUnity(string inputText)
     {
-        //string reply = await llmCharacter.Chat(inputText, HandleReply, ReplyCompleted);
+        string reply = await llmCharacter.Chat(inputText, HandleReply, ReplyCompleted);
     }
     #endregion
 }
