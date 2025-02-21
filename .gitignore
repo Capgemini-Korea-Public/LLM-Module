@@ -70,6 +70,5 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
-/UnityXNode/Assets/99. Externals/Hivemind
-/UnityXNode/Assets/99. Externals/1. Player_EJ
 *.onnx
+/LLM-Module/Assets/StreamingAssets
