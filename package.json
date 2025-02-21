@@ -1,0 +1,31 @@
+{
+  "name": "com.capgemini.llmmodule",
+  "version": "1.0.0",
+  "displayName": "LLM Module for Unity",
+  "description": "In Unity, you can use LLM features with different models using a RESTful API, a localhost API, or a local library.",
+  "unity": "2021.3",
+  "keywords": [
+    "llmModule",
+    "unity"
+  ],
+  "dependencies": {
+    "com.unity.sentis": "2.1.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Capgemini-Korea-Public/Unity-LLM-Module"
+  },
+  "author": {
+    "name": "Capgemini",
+    "email": "lumenize960@gmail.com",
+    "url": "https://github.com/LuBly"
+  },
+  "samples": [
+    {
+      "displayName": "using LLM Example",
+      "description": "Example Chatbot for Using LLM",
+      "path": "Samples~/ChatBot"
+    }
+  ],
+  "documentationUrl": "https://github.com/Capgemini-Korea-Public/Unity-LLM-Module"
+}  
