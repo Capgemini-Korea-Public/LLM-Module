@@ -1,7 +1,10 @@
+// Portions of this file are based on code from ollama-unity
+// Repository: https://github.com/Haoming02/ollama-unity
+// License: MIT License
+
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Unity.Mathematics;
-using static Ollama;
 
 public static partial class Ollama
 {
