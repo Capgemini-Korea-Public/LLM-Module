@@ -1820,9 +1820,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0293cd018382e34082ae9052a06fd2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  apiType: 2
+  apiType: 1
   llm: {fileID: 0}
   llmCharacter: {fileID: 0}
+  LocalhostModel: llama3:latest
   selectedModelIndex: 0
 --- !u!1 &1557290120
 GameObject:
