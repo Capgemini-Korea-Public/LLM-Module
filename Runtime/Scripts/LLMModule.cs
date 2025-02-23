@@ -1,7 +1,5 @@
 using UnityEngine;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using OpenAI;
 using LLMUnity;
 /// <summary>
 /// Using LLMUnity, OpenAI, Ollama All in One Module
@@ -18,6 +16,7 @@ public class LLMModule : MonoBehaviour
     AdaptorData llmServiceData;
     [HideInInspector] public LLM llm;
     [HideInInspector] public LLMCharacter llmCharacter;
+    [HideInInspector] public string LocalhostModel;
 
     public int selectedModelIndex = 0;
     // EModelType에 따라 다른 llmService를 끼워준다.
@@ -32,7 +31,7 @@ public class LLMModule : MonoBehaviour
                 break;
             case EAPIType.LocalhostAPI:
                 llmService = new LocalhostAPIAdaptor();
-                llmServiceData = new LocalhostAdaptorData();
+                llmServiceData = new LocalhostAdaptorData(LocalhostModel);
                 break;
             case EAPIType.RestfulAPI:
                 llmService = new RESTfulAPIAdaptor();

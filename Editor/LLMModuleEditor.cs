@@ -12,7 +12,7 @@ public class LLMModuleEditor : Editor
     private LLMModule targetComponent;
     private EAPIType previousApiType;
     private bool showDropdown = false;
-    List<string> LocalhostModels = new List<string>();
+    List<string> localhostModels = new List<string>();
     private void OnEnable()
     {
         targetComponent = (LLMModule)target;
@@ -70,15 +70,16 @@ public class LLMModuleEditor : Editor
 
         if (showDropdown)
         {
-            if(LocalhostModels.Count > 0)
+            if(localhostModels.Count > 0)
             {
                 EditorGUI.indentLevel++;
-                targetComponent.selectedModelIndex = EditorGUILayout.Popup("Select Model", targetComponent.selectedModelIndex, LocalhostModels.ToArray());
+                targetComponent.selectedModelIndex = EditorGUILayout.Popup("Select Model", targetComponent.selectedModelIndex, localhostModels.ToArray());
+                targetComponent.LocalhostModel = localhostModels[targetComponent.selectedModelIndex];
                 EditorGUI.indentLevel--;
             }
             else
             {
-                //EditorGUI.
+                //Ollama에 설치된 model이 없다고 표시
             }
         }
     }
@@ -90,8 +91,8 @@ public class LLMModuleEditor : Editor
 
         try
         {
-            LocalhostModels = await FetchOllamaModels();
-            foreach (var item in LocalhostModels)
+            localhostModels = await FetchOllamaModels();
+            foreach (var item in localhostModels)
             {
                 Debug.Log(item);
             }

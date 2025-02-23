@@ -9,9 +9,10 @@ public class LocalhostAPIAdaptor : ILLMService
 
     public void Init(AdaptorData adaptorData)
     {
+        LocalhostAdaptorData localhostAdaptorData = adaptorData as LocalhostAdaptorData;
         Ollama.InitChat();
         buffer = new Queue<string>();
-        model = "llama3.1";
+        model = localhostAdaptorData.modelName;
     }
 
 

@@ -2,13 +2,15 @@ using LLMUnity;
 
 public class AdaptorData
 {
-    string modelName;
-    string role;
+    public string modelName;
+    public string role;
 }
-
 public class LocalhostAdaptorData : AdaptorData
 {
-
+    public LocalhostAdaptorData(string modelName)
+    {
+        this.modelName = modelName;
+    }
 }
 
 public class RESTfulAdaptorData : AdaptorData

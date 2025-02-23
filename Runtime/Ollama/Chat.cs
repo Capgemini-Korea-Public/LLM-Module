@@ -106,7 +106,7 @@ public static partial class Ollama
     {
         ChatHistory.Enqueue(new Message("user", prompt, Texture2Base64(image)));
         Message[] messages;
-        Debug.Log($"1. enqueue {prompt}");
+        Debug.Log($"1. enqueue {prompt} by {model}");
         if (systemPrompt == null)
             messages = ChatHistory.ToArray();
         else
