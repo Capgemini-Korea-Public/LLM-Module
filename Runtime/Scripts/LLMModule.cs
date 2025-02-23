@@ -18,6 +18,8 @@ public class LLMModule : MonoBehaviour
     AdaptorData llmServiceData;
     [HideInInspector] public LLM llm;
     [HideInInspector] public LLMCharacter llmCharacter;
+
+    public int selectedModelIndex = 0;
     // EModelType에 따라 다른 llmService를 끼워준다.
 
     private void Start()

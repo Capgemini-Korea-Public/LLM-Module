@@ -1,4 +1,5 @@
 using LLMUnity;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEditor;
@@ -10,7 +11,8 @@ public class LLMModuleEditor : Editor
 {
     private LLMModule targetComponent;
     private EAPIType previousApiType;
-
+    private bool showDropdown = false;
+    List<string> LocalhostModels = new List<string>();
     private void OnEnable()
     {
         targetComponent = (LLMModule)target;
@@ -58,22 +60,53 @@ public class LLMModuleEditor : Editor
         }
     }
 
-    private async void HandleLocalhostType()
+    private void HandleLocalhostType()
     {
+        
         if (GUILayout.Button("Fetch Ollama Models"))
         {
+            FetchModelsAndShowDropdown();
+        }
 
-            List<string> models = await FetchOllamaModels();
-            // 모델 리스트를 표시하거나 저장하는 로직 구현
+        if (showDropdown)
+        {
+            if(LocalhostModels.Count > 0)
+            {
+                EditorGUI.indentLevel++;
+                targetComponent.selectedModelIndex = EditorGUILayout.Popup("Select Model", targetComponent.selectedModelIndex, LocalhostModels.ToArray());
+                EditorGUI.indentLevel--;
+            }
+            else
+            {
+                //EditorGUI.
+            }
         }
     }
 
-    private void HandleRestfulType()
+    private async void FetchModelsAndShowDropdown()
     {
-        //EditorGUILayout.PropertyField(serializedObject.FindProperty("apiKey"));
-        //EditorGUILayout.PropertyField(serializedObject.FindProperty("model"));
-    }
+        showDropdown = false; // 로딩 중에는 드롭다운 숨기기
+        EditorUtility.DisplayProgressBar("Fetching Models", "Please wait...", 0.5f);
 
+        try
+        {
+            LocalhostModels = await FetchOllamaModels();
+            foreach (var item in LocalhostModels)
+            {
+                Debug.Log(item);
+            }
+            showDropdown = true; // 모델 로딩 완료 후 드롭다운 표시
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error fetching models: {e.Message}");
+        }
+        finally
+        {
+            EditorUtility.ClearProgressBar();
+            Repaint(); // UI 갱신
+        }
+    }
 
     private async Task<List<string>> FetchOllamaModels()
     {
@@ -86,6 +119,14 @@ public class LLMModuleEditor : Editor
         }
         return modelNames;
     }
+
+    private void HandleRestfulType()
+    {
+        //EditorGUILayout.PropertyField(serializedObject.FindProperty("apiKey"));
+        //EditorGUILayout.PropertyField(serializedObject.FindProperty("model"));
+    }
+
+
 
     private T AddComponent<T>() where T : Component
     {
