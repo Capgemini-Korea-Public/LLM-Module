@@ -110,7 +110,7 @@ If you are using OpenAI for production, make sure to run it on the server side, 
 More Details : https://github.com/srcnalt/OpenAI-Unity/tree/master
 
 
-### LLM Unity
+## LLM Unity
 1.  Open the Package Manager in Unity: `Window > Package Manager`
 2.  Click the `+` button and select `Add package from git URL`
 3. Use the repository URL `https://github.com/undreamai/LLMUnity.git` and click `Add`
