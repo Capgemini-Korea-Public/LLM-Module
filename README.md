@@ -29,8 +29,32 @@ Tested on Unity: Unity 6
 ## Usage
 
 1. Add Component "LLM Module"
-2. Select API Type 
+   <br>![image](https://github.com/user-attachments/assets/46071f96-6b72-4abe-9760-5560708fdb40)
+2. Select API Type
+   <br>![image](https://github.com/user-attachments/assets/d4a58619-8cfd-4ccb-b07d-de6a112a889c)
+
 3. Select Model
+   
+    - LocalLibrary
+    1. Press the "Add LLM and LLM Character" Button
+    <br>![image](https://github.com/user-attachments/assets/43dd490c-bf49-49b8-acc6-ea43207a1eb0)
+
+    2. choose model or add model at LLM
+    <br>![image](https://github.com/user-attachments/assets/0780950d-a905-4225-b4c5-0879b7f48b8d)
+    <br> Download one of the default models with the Download Model button (~GBs).
+    <br> Or load your own .gguf model with the Load model button 
+    <br> more detail : (see [LLM model management](https://github.com/undreamai/LLMUnity?tab=readme-ov-file#llm-model-management)).
+ 
+    - LocalhostAPI
+    1. Press the "Fetch Ollama Models)
+    <br>![image](https://github.com/user-attachments/assets/134e35cd-cdf7-4815-844d-e50d9509aae3)
+    
+    2. Select Model (which is installed in Ollama)
+    <br>![image](https://github.com/user-attachments/assets/569157c7-0384-42c4-bdcc-201b3f2f4e33)
+
+    
+    - RestfulAPI (InProgress)
+   
 4. Run
 
 # External Dependencies
