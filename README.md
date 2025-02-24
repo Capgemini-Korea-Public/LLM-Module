@@ -15,9 +15,9 @@ Tested on Unity: Unity 6
 
 ## External Dependencies
 
-- Ollama
-- OpenAI Unity
-- LLM Unity
+- [Ollama](https://github.com/Capgemini-Korea-Public/Unity-LLM-Module/blob/main/README.md#ollama)
+- [OpenAI Unity](https://github.com/Capgemini-Korea-Public/Unity-LLM-Module/edit/main/README.md#openai-unity)
+- [LLM Unity](https://github.com/Capgemini-Korea-Public/Unity-LLM-Module/edit/main/README.md#llm-unity)
 
 # Installation and Usage
 
