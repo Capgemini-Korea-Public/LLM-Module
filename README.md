@@ -35,7 +35,7 @@ Tested on Unity: Unity 6
 
 3. Select Model
    
-    - LocalLibrary
+    - LocalLibrary(Native)
     1. Press the "Add LLM and LLM Character" Button
     <br>![image](https://github.com/user-attachments/assets/43dd490c-bf49-49b8-acc6-ea43207a1eb0)
 
