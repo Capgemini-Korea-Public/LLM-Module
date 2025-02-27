@@ -155,7 +155,7 @@ public static partial class Ollama
         return imagesBase64;
     }
 
-    private static string Texture2Base64(Texture2D texture, bool fullQuality = false)
+    public static string Texture2Base64(Texture2D texture, bool fullQuality = false)
     {
         if (texture == null)
             return null;

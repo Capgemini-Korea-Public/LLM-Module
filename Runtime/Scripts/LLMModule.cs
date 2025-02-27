@@ -47,5 +47,11 @@ public class LLMModule : MonoBehaviour
         Debug.Log($"{llmService.GetType().Name} start");
         return await llmService.Chat(inputText);
     }
+
+    public async Task<string> Chat(string inputText, Texture2D inputImage)
+    {
+        Debug.Log($"{llmService.GetType().Name} start");
+        return await llmService.Chat(inputText, inputImage);
+    }
 }
 

@@ -30,4 +30,9 @@ public class LocalhostAPIAdaptor : ILLMService
         Debug.Log(res);
         return res;
     }
+
+    public Task<string> Chat(string inputText, Texture2D inputImage)
+    {
+        throw new System.NotImplementedException();
+    }
 }
